@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS travel_wishlist_app_axepz_destinations;
