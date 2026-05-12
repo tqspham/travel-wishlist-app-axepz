@@ -19,7 +19,7 @@ export function proxy(request: NextRequest) {
   }
 
   // Protected routes require a valid session
-  if (isProtectedPath && !sessionToken) {
+  if (isProtectedPath && !isPublicPath && !sessionToken) {
     const loginUrl = new URL("/auth/login", request.url);
     // Only add 'from' parameter if the original path is not a public auth path
     if (pathname !== "/" && !publicPaths.some((p) => pathname.startsWith(p))) {
