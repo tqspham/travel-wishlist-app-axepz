@@ -1,7 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { FormEvent, useState } from "react";
 
 interface AddDestinationFormProps {
   onSuccess: () => void;
@@ -12,26 +11,11 @@ export default function AddDestinationForm({
 }: AddDestinationFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [imageBase64, setImageBase64] = useState<string | undefined>();
   const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; description?: string }>(
     {}
   );
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string;
-        setImageBase64(base64);
-        setImageUrl("");
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,7 +40,6 @@ export default function AddDestinationForm({
       const payload = {
         name: name.trim(),
         description: description.trim(),
-        ...(imageBase64 ? { imageBase64 } : {}),
         ...(imageUrl ? { imageUrl } : {}),
       };
 
@@ -79,21 +62,12 @@ export default function AddDestinationForm({
 
       setName("");
       setDescription("");
-      setImageBase64(undefined);
       setImageUrl("");
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
       onSuccess();
     } catch (err) {
       setErrors({
         name: err instanceof Error ? err.message : "An error occurred",
       });
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-      setImageBase64(undefined);
-      setImageUrl("");
     } finally {
       setIsLoading(false);
     }
@@ -135,35 +109,18 @@ export default function AddDestinationForm({
         )}
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
-          Image (Optional)
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Image URL (Optional)
         </label>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:bg-gray-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <Upload size={18} />
-            Choose Image
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-          />
-        </div>
-        {imageBase64 && (
-          <img
-            src={imageBase64}
-            alt="Preview"
-            className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-          />
-        )}
+        <input
+          type="text"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="https://example.com/image.jpg"
+          disabled={isLoading}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+        />
       </div>
 
       <button
