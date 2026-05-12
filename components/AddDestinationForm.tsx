@@ -89,6 +89,11 @@ export default function AddDestinationForm({
       setErrors({
         name: err instanceof Error ? err.message : "An error occurred",
       });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setImageBase64(undefined);
+      setImageUrl("");
     } finally {
       setIsLoading(false);
     }

@@ -109,6 +109,13 @@ export async function POST(request: NextRequest) {
         .from("destinations")
         .getPublicUrl(fileName);
 
+      if (!publicUrlData || !publicUrlData.publicUrl) {
+        return NextResponse.json(
+          { error: "Failed to get public URL for uploaded image" },
+          { status: 500 }
+        );
+      }
+
       finalImageUrl = publicUrlData.publicUrl;
     } else if (imageUrl) {
       finalImageUrl = imageUrl;
