@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import WishlistStats from "@/components/WishlistStats";
 import FilterTabs from "@/components/FilterTabs";
 import AddDestinationForm from "@/components/AddDestinationForm";
 import DestinationList from "@/components/DestinationList";
+import LogoutButton from "@/components/LogoutButton";
 
 interface Destination {
   id: string;
@@ -20,11 +22,29 @@ type FilterType = "all" | "visited" | "unvisited";
 type SortType = "name" | "date";
 
 export default function Home() {
+  const router = useRouter();
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<FilterType>("all");
   const [sort, setSort] = useState<SortType>("date");
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          router.push("/auth/login");
+        }
+      } catch {
+        router.push("/auth/login");
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const fetchDestinations = async () => {
     try {
@@ -50,8 +70,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchDestinations();
-  }, [sort]);
+    if (isAuthenticated) {
+      fetchDestinations();
+    }
+  }, [sort, isAuthenticated]);
 
   const handleVisitedToggle = async (id: string, visited: boolean) => {
     try {
@@ -118,16 +140,23 @@ export default function Home() {
   const totalCount = destinations.length;
   const visitedCount = destinations.filter((d) => d.visited).length;
 
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 sm:p-8">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">
-            Travel Wishlist
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Plan your next adventure and track your travels
-          </p>
+        <header className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">
+              Travel Wishlist
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Plan your next adventure and track your travels
+            </p>
+          </div>
+          <LogoutButton />
         </header>
 
         {error && (

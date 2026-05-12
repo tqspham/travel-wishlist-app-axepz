@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { validateSession } from "@/lib/session";
 
 interface Destination {
   id: string;
@@ -9,6 +10,7 @@ interface Destination {
   visited: boolean;
   created_at: string;
   updated_at: string;
+  user_id: string;
 }
 
 interface ApiDestination {
@@ -35,11 +37,30 @@ function mapDbToApi(db: Destination): ApiDestination {
 
 export async function GET(request: NextRequest) {
   try {
+    const sessionToken = request.cookies.get("auth_session")?.value;
+
+    if (!sessionToken) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const userId = await validateSession(sessionToken);
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const sort = request.nextUrl.searchParams.get("sort") || "date";
 
     let query = supabase
       .from("travel_wishlist_app_axepz_destinations")
-      .select("*");
+      .select("*")
+      .eq("user_id", userId);
 
     if (sort === "name") {
       query = query.order("name", { ascending: true });
@@ -69,8 +90,26 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const sessionToken = request.cookies.get("auth_session")?.value;
+
+    if (!sessionToken) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const userId = await validateSession(sessionToken);
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
-    const { name, description, imageBase64, imageUrl } = body;
+    const { name, description, imageUrl } = body;
 
     if (!name || !name.trim()) {
       return NextResponse.json(
@@ -86,40 +125,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let finalImageUrl = "";
-
-    if (imageBase64) {
-      const base64Data = imageBase64.split(",")[1];
-      const fileName = `destination-${Date.now()}.jpg`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("destinations")
-        .upload(fileName, Buffer.from(base64Data, "base64"), {
-          contentType: "image/jpeg",
-        });
-
-      if (uploadError) {
-        return NextResponse.json(
-          { error: "Failed to upload image" },
-          { status: 500 }
-        );
-      }
-
-      const { data: publicUrlData } = supabase.storage
-        .from("destinations")
-        .getPublicUrl(fileName);
-
-      if (!publicUrlData || !publicUrlData.publicUrl) {
-        return NextResponse.json(
-          { error: "Failed to get public URL for uploaded image" },
-          { status: 500 }
-        );
-      }
-
-      finalImageUrl = publicUrlData.publicUrl;
-    } else if (imageUrl) {
-      finalImageUrl = imageUrl;
-    }
+    const finalImageUrl = imageUrl || "";
 
     const { data, error } = await supabase
       .from("travel_wishlist_app_axepz_destinations")
@@ -129,6 +135,7 @@ export async function POST(request: NextRequest) {
           description: description.trim(),
           image_url: finalImageUrl,
           visited: false,
+          user_id: userId,
         },
       ])
       .select()
