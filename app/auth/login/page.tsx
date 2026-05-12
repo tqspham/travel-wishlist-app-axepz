@@ -1,15 +1,28 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Extract and validate the 'from' parameter
+  const getValidFromPath = (): string | null => {
+    const from = searchParams.get("from");
+    if (!from) return null;
+    // Reject public auth paths to prevent redirect loops
+    const publicPaths = ["/auth/login", "/auth/signup"];
+    if (publicPaths.some((p) => from.startsWith(p))) {
+      return null;
+    }
+    return from;
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +43,9 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/");
+      // After successful login, redirect to the 'from' destination if valid, otherwise to home
+      const validFrom = getValidFromPath();
+      router.push(validFrom || "/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {

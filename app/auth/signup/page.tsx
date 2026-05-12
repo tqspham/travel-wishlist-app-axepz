@@ -2,10 +2,11 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -16,6 +17,18 @@ export default function SignupPage() {
     passwordConfirm?: string;
     general?: string;
   }>({});
+
+  // Extract and validate the 'from' parameter
+  const getValidFromPath = (): string | null => {
+    const from = searchParams.get("from");
+    if (!from) return null;
+    // Reject public auth paths to prevent redirect loops
+    const publicPaths = ["/auth/login", "/auth/signup"];
+    if (publicPaths.some((p) => from.startsWith(p))) {
+      return null;
+    }
+    return from;
+  };
 
   const validateInputs = (): boolean => {
     const newErrors: typeof errors = {};
@@ -61,7 +74,9 @@ export default function SignupPage() {
         return;
       }
 
-      router.push("/");
+      // After successful signup, redirect to the 'from' destination if valid, otherwise to home
+      const validFrom = getValidFromPath();
+      router.push(validFrom || "/");
     } catch (err) {
       setErrors({
         general: err instanceof Error ? err.message : "An error occurred",
