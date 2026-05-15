@@ -33,12 +33,12 @@ export default function DestinationCard({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-lg overflow-hidden transition-all ${
+      className={`bg-[var(--color-surface)] rounded-lg shadow-lg overflow-hidden transition-all border border-[var(--color-border)] flex flex-col h-full ${
         destination.visited ? "opacity-75" : ""
       }`}
     >
       {destination.imageUrl ? (
-        <div className="relative h-48 bg-gray-100 overflow-hidden">
+        <div className="relative h-48 bg-[var(--color-background)] overflow-hidden">
           <img
             src={destination.imageUrl}
             alt={destination.name}
@@ -47,8 +47,8 @@ export default function DestinationCard({
             }`}
           />
           {destination.visited && (
-            <div className="absolute inset-0 bg-green-500 bg-opacity-20 flex items-center justify-center">
-              <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            <div className="absolute inset-0 bg-[var(--color-success)] bg-opacity-20 flex items-center justify-center">
+              <span className="bg-[var(--color-success)] text-[var(--color-surface)] px-3 py-1 rounded-lg text-sm font-medium">
                 Visited ✓
               </span>
             </div>
@@ -56,35 +56,35 @@ export default function DestinationCard({
         </div>
       ) : (
         <div
-          className={`h-48 bg-gradient-to-br from-blue-200 to-indigo-200 flex items-center justify-center ${
+          className={`h-48 bg-[var(--color-border)] flex items-center justify-center ${
             destination.visited ? "opacity-50" : ""
           }`}
         >
-          <MapPin size={48} className="text-blue-400" />
+          <MapPin size={48} className="text-[var(--color-secondary)]" strokeWidth={1} />
         </div>
       )}
 
-      <div className="p-4">
+      <div className="p-5 flex-1 flex flex-col">
         <h3
-          className={`text-lg font-semibold text-gray-900 mb-1 ${
-            destination.visited ? "line-through text-gray-500" : ""
+          className={`text-lg font-semibold text-[var(--color-primary)] mb-2 ${
+            destination.visited ? "line-through text-[var(--color-muted-text)]" : ""
           }`}
         >
           {destination.name}
         </h3>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="text-[var(--color-muted-text)] text-sm mb-4 line-clamp-2 flex-1">
           {destination.description}
         </p>
 
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4 pt-2 border-t border-[var(--color-border)]">
           <input
             type="checkbox"
             checked={destination.visited}
             onChange={(e) => onVisitedToggle(destination.id, e.target.checked)}
-            className="w-5 h-5 text-green-500 rounded focus:ring-2 focus:ring-green-500 cursor-pointer"
+            className="w-4 h-4 rounded cursor-pointer accent-[var(--color-success)]"
           />
-          <label className="text-sm text-gray-700 cursor-pointer">
+          <label className="text-sm text-[var(--color-text)] cursor-pointer font-medium">
             Mark as visited
           </label>
         </div>
@@ -92,16 +92,16 @@ export default function DestinationCard({
         <div className="flex gap-2">
           <button
             onClick={() => onEdit(destination.id)}
-            className="flex-1 px-3 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+            className="flex-1 px-3 py-2 bg-[var(--color-border)] text-[var(--color-primary)] rounded-lg hover:bg-[var(--color-secondary)] hover:bg-opacity-20 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
           >
-            <Edit2 size={16} />
+            <Edit2 size={16} strokeWidth={1.5} />
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className="flex-1 px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+            className="flex-1 px-3 py-2 bg-[var(--color-danger)] bg-opacity-10 text-[var(--color-danger)] rounded-lg hover:bg-opacity-20 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
           >
-            <Trash2 size={16} />
+            <Trash2 size={16} strokeWidth={1.5} />
             Delete
           </button>
         </div>

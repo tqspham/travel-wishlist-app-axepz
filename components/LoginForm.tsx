@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -12,11 +12,9 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Extract and validate the 'from' parameter
   const getValidFromPath = (): string | null => {
     const from = searchParams.get("from");
     if (!from) return null;
-    // Reject public auth paths to prevent redirect loops
     const publicPaths = ["/auth/login", "/auth/signup"];
     if (publicPaths.some((p) => from.startsWith(p))) {
       return null;
@@ -43,7 +41,6 @@ export default function LoginForm() {
         return;
       }
 
-      // After successful login, redirect to the 'from' destination if valid, otherwise to home
       const validFrom = getValidFromPath();
       router.push(validFrom || "/");
     } catch (err) {
@@ -54,20 +51,20 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Travel Wishlist</h1>
-        <p className="text-gray-600 mb-8">Sign in to your account</p>
+    <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
+      <div className="bg-[var(--color-surface)] rounded-lg shadow-lg p-8 w-full max-w-md border border-[var(--color-border)]">
+        <h1 className="text-4xl font-bold text-[var(--color-primary)] mb-3" style={{ fontFamily: "'Georgia', 'Garamond', serif", letterSpacing: '0.02em' }}>Travel Wishlist</h1>
+        <p className="text-[var(--color-muted-text)] mb-8 text-sm">Sign in to your account</p>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          <div className="mb-6 p-4 bg-[var(--color-danger)] bg-opacity-10 border border-[var(--color-danger)] rounded-lg text-[var(--color-danger)] text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
               Email
             </label>
             <input
@@ -77,12 +74,12 @@ export default function LoginForm() {
               placeholder="you@example.com"
               disabled={isLoading}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:border-[var(--color-secondary)] disabled:bg-[var(--color-background)] disabled:cursor-not-allowed bg-[var(--color-surface)] text-[var(--color-text)]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
               Password
             </label>
             <input
@@ -92,22 +89,22 @@ export default function LoginForm() {
               placeholder="••••••••"
               disabled={isLoading}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:border-[var(--color-secondary)] disabled:bg-[var(--color-background)] disabled:cursor-not-allowed bg-[var(--color-surface)] text-[var(--color-text)]"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed font-medium transition-colors"
+            className="w-full px-4 py-3 bg-[var(--color-primary)] text-[var(--color-surface)] rounded-lg hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all text-center"
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600 text-sm">
+        <p className="mt-6 text-center text-[var(--color-muted-text)] text-sm">
           Don't have an account?{" "}
-          <Link href="/auth/signup" className="text-blue-500 hover:text-blue-600 font-medium">
+          <Link href="/auth/signup" className="text-[var(--color-secondary)] hover:text-[var(--color-accent)] font-medium underline">
             Sign Up
           </Link>
         </p>

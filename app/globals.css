@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+:root {
+  --color-background: #FAF9F6;
+  --color-surface: #FFFFFF;
+  --color-primary: #1A1A18;
+  --color-secondary: #C4A86D;
+  --color-accent: #A67C52;
+  --color-text: #262622;
+  --color-muted-text: #8A8680;
+  --color-border: #E8E4DC;
+  --color-success: #6B9E7C;
+  --color-warning: #C9956B;
+  --color-danger: #A85B5B;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Trebuchet MS', 'Calibri', sans-serif;
+  line-height: 1.6;
+}
+
+/* Serif display font for headings */
+h1, h2, h3 {
+  font-family: 'Georgia', 'Garamond', serif;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* Refine form inputs */
+input, textarea, select {
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-muted-text);
+  opacity: 1;
+}
+
+/* Focus states */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: none;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}

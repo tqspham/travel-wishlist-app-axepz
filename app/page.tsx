@@ -145,46 +145,48 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 sm:p-8">
+    <div className="min-h-screen bg-[var(--color-background)] p-4 sm:p-8">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-2">
+        <header className="mb-12 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
+          <div className="flex-1">
+            <h1 className="text-5xl sm:text-6xl font-bold text-[var(--color-primary)] mb-3" style={{ fontFamily: "'Georgia', 'Garamond', serif", letterSpacing: '0.02em' }}>
               Travel Wishlist
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-[var(--color-muted-text)] text-lg leading-relaxed">
               Plan your next adventure and track your travels
             </p>
           </div>
-          <LogoutButton />
+          <div className="flex-shrink-0">
+            <LogoutButton />
+          </div>
         </header>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 p-4 bg-[var(--color-danger)] bg-opacity-10 border border-[var(--color-danger)] rounded-lg text-[var(--color-danger)]">
             {error}
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="bg-[var(--color-surface)] rounded-lg shadow-lg p-6 sm:p-8 mb-8 border border-[var(--color-border)]">
           <WishlistStats totalCount={totalCount} visitedCount={visitedCount} />
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <div className="bg-[var(--color-surface)] rounded-lg shadow-lg p-6 sm:p-8 mb-8 border border-[var(--color-border)]">
+          <h2 className="text-3xl font-semibold text-[var(--color-primary)] mb-6" style={{ fontFamily: "'Georgia', 'Garamond', serif" }}>
             Add New Destination
           </h2>
           <AddDestinationForm onSuccess={fetchDestinations} />
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <h2 className="text-2xl font-semibold text-gray-900">
+        <div className="bg-[var(--color-surface)] rounded-lg shadow-lg p-6 sm:p-8 mb-8 border border-[var(--color-border)]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <h2 className="text-3xl font-semibold text-[var(--color-primary)]" style={{ fontFamily: "'Georgia', 'Garamond', serif" }}>
               My Destinations
             </h2>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortType)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-0 bg-[var(--color-surface)] text-[var(--color-text)]"
             >
               <option value="date">Sort by Date Added</option>
               <option value="name">Sort by Name</option>

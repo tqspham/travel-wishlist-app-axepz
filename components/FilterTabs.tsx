@@ -19,10 +19,10 @@ export default function FilterTabs({
         <button
           key={filter.id}
           onClick={() => onFilterChange(filter.id)}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
             activeFilter === filter.id
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-[var(--color-primary)] text-[var(--color-surface)]"
+              : "bg-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-border)] hover:bg-opacity-80"
           }`}
         >
           {filter.label}

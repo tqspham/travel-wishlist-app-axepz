@@ -37,19 +37,19 @@ export default function DestinationList({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-pulse rounded-full h-12 w-12 bg-[var(--color-secondary)] opacity-50"></div>
       </div>
     );
   }
 
   if (destinations.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-        <p className="text-gray-600 text-lg mb-4">
+      <div className="bg-[var(--color-surface)] rounded-lg shadow-lg p-12 text-center border border-[var(--color-border)]">
+        <p className="text-[var(--color-muted-text)] text-base mb-4">
           No destinations yet! Start planning your next adventure by adding your
           first destination above.
         </p>
-        <p className="text-gray-500">✈️</p>
+        <p className="text-2xl">✈️</p>
       </div>
     );
   }
