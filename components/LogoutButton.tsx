@@ -28,7 +28,7 @@ export default function LogoutButton() {
     <button
       onClick={handleLogout}
       disabled={isLoading}
-      className="flex items-center gap-2 px-4 py-3 bg-[var(--color-danger)] bg-opacity-10 text-[var(--color-danger)] rounded-lg hover:bg-opacity-20 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+      className="flex items-center gap-2 px-4 py-3 bg-[var(--color-danger)] text-[var(--color-surface)] rounded-lg hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
     >
       <LogOut size={18} strokeWidth={1.5} />
       {isLoading ? "Logging out..." : "Log Out"}
